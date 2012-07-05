@@ -113,7 +113,6 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
             $sSelect .= " order by {$sSortBy} ";
         }
 
-        echo $sSelect;
         return $sSelect;
     }
     
