@@ -79,6 +79,7 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
 
 
         $sManView = getViewName('oxmanufacturers', $this->_iLanguage );
+        $sVenView = getViewName('oxvendor', $this->_iLanguage ); 
         
         //select articles
         $sSelect = "select {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN {$sManView} ON {$sArticleTable}.oxmanufacturerid={$sManView}.oxid where ";  
@@ -128,6 +129,7 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         $blSep    = false;
         $sArticleTable = getViewName( 'oxarticles' , $this->_iLanguage );
         $sManView = getViewName( 'oxmanufacturers' , $this->_iLanguage );
+        $sVenView = getViewName( 'oxvendor' , $this->_iLanguage );
         
         $aSearchCols = $myConfig->getConfigParam( 'aSearchCols' );
         if ( !(is_array( $aSearchCols ) && count( $aSearchCols ) ) ) {
@@ -183,6 +185,8 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
             }
             $sSearch .= " or {$sManView}.oxtitle like ".$oDb->quote( "%$sSearchString%" );
             $sSearch .= " or {$sManView}.oxshortdesc like ".$oDb->quote( "%$sSearchString%" );
+            $sSearch .= " or {$sVenView}.oxtitle like ".$oDb->quote( "%$sSearchString%" ); 
+            $sSearch .= " or {$sVenView}.oxshortdesc like ".$oDb->quote( "%$sSearchString%" );
             $sSearch  .= ' ) ';
 
             $blSep = true;
