@@ -9,6 +9,7 @@ MIT License
 class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearch_parent {
 
 
+    
     protected function _getSearchSelect( $sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
         $oDb = oxDb::getDb();
@@ -71,17 +72,20 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         $sDescJoin  = '';
         if ( is_array( $aSearchCols = $this->getConfig()->getConfigParam( 'aSearchCols' ) ) ) {
             if ( in_array( 'oxlongdesc', $aSearchCols ) || in_array( 'oxtags', $aSearchCols ) ) {
-                $sDescView  = getViewName( 'oxartextends' );
+                $sDescView  = getViewName( 'oxartextends' , $this->_iLanguage  );
                 $sDescJoin  = " LEFT JOIN {$sDescView} ON {$sArticleTable}.oxid={$sDescView}.oxid ";
             }
         }
 
+
+        $sManView = getViewName('oxmanufacturers', $this->_iLanguage );
+        
         //select articles
-        $sSelect = "select {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN oxmanufacturers ON oxarticles.oxmanufacturerid=oxmanufacturers.oxid where ";  
+        $sSelect = "select {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN {$sManView} ON {$sArticleTable}.oxmanufacturerid={$sManView}.oxid where ";  
 
         // must be additional conditions in select if searching in category
         if ( $sInitialSearchCat ) {
-            $sCatView = getViewName( 'oxcategories' );
+            $sCatView = getViewName( 'oxcategories' , $this->_iLanguage );
             $sInitialSearchCatQuoted = $oDb->quote( $sInitialSearchCat );
             $sSelectCat  = "select oxid from {$sCatView} where oxid =  $sInitialSearchCatQuoted and (oxpricefrom != '0' or oxpriceto != 0)";
             if ( $oDb->getOne($sSelectCat) ) {
@@ -113,6 +117,7 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
             $sSelect .= " order by {$sSortBy} ";
         }
 
+        echo $sSelect; 
         return $sSelect;
     }
     
@@ -122,8 +127,9 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         $oDb = oxDb::getDb();
         $myConfig = $this->getConfig();
         $blSep    = false;
-        $sArticleTable = getViewName( 'oxarticles' );
-
+        $sArticleTable = getViewName( 'oxarticles' , $this->_iLanguage );
+        $sManView = getViewName( 'oxmanufacturers' , $this->_iLanguage );
+        
         $aSearchCols = $myConfig->getConfigParam( 'aSearchCols' );
         if ( !(is_array( $aSearchCols ) && count( $aSearchCols ) ) ) {
             return '';
@@ -162,9 +168,9 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
 
                 // as long description now is on different table table must differ
                 if ( $sField == 'oxlongdesc' || $sField == 'oxtags' ) {
-                    $sSearchField = getViewName( 'oxartextends' ).".{$sField}{$sLanguage}";
+                    $sSearchField = getViewName( 'oxartextends', $this->_iLanguage ).".{$sField}";
                 } else {
-                    $sSearchField = "{$sArticleTable}.{$sField}{$sLanguage}";
+                    $sSearchField = "{$sArticleTable}.{$sField}";
                 }
 
                 $sSearch .= " {$sSearchField} like ".$oDb->quote( "%$sSearchString%" );
@@ -176,8 +182,8 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
 
                 $blSep2 = true;
             }
-            $sSearch .= 'or oxmanufacturers.oxtitle like '.$oDb->quote( "%$sSearchString%" );
-            $sSearch .= ' or oxmanufacturers.oxshortdesc like '.$oDb->quote( "%$sSearchString%" );
+            $sSearch .= " or {$sManView}.oxtitle like ".$oDb->quote( "%$sSearchString%" );
+            $sSearch .= " or {$sManView}.oxshortdesc like ".$oDb->quote( "%$sSearchString%" );
             $sSearch  .= ' ) ';
 
             $blSep = true;
@@ -187,4 +193,4 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         return $sSearch;
     }
 
-} 
+}
