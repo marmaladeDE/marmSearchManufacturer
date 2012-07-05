@@ -77,7 +77,7 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         }
 
         //select articles
-        $sSelect = "select oxmanufacturers.oxtitle, oxmanufacturers.oxshortdesc, {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN oxmanufacturers ON oxarticles.oxmanufacturerid=oxmanufacturers.oxid where ";  
+        $sSelect = "select {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN oxmanufacturers ON oxarticles.oxmanufacturerid=oxmanufacturers.oxid where ";  
 
         // must be additional conditions in select if searching in category
         if ( $sInitialSearchCat ) {
