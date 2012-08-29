@@ -82,7 +82,7 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         $sVenView = getViewName('oxvendor', $this->_iLanguage ); 
         
         //select articles
-        $sSelect = "select {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN {$sManView} ON {$sArticleTable}.oxmanufacturerid={$sManView}.oxid where ";  
+        $sSelect = "select {$sSelectFields}  from {$sArticleTable} {$sDescJoin} LEFT JOIN {$sManView} ON {$sArticleTable}.oxmanufacturerid={$sManView}.oxid LEFT JOIN {$sVenView} ON {$sArticleTable}.oxvendorid={$sVenView}.oxid where ";
 
         // must be additional conditions in select if searching in category
         if ( $sInitialSearchCat ) {
