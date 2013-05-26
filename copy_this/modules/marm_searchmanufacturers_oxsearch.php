@@ -140,8 +140,8 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
         $sSearchSep   = $myConfig->getConfigParam( 'blSearchUseAND' )?'and ':'or ';
         $aSearch  = explode( ' ', $sSearchString );
         $sSearch  = ' and ( ';
-        $myUtilsString = oxUtilsString::getInstance();
-        $oLang = oxLang::getInstance();
+        $myUtilsString = oxRegistry::get("oxUtilsString");
+        $oLang = oxRegistry::getLang();
 
         foreach ( $aSearch as $sSearchString ) {
 
