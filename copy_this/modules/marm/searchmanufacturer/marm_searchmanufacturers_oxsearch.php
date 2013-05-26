@@ -114,8 +114,8 @@ class marm_searchmanufacturers_oxsearch extends marm_searchmanufacturers_oxsearc
 
         $sSelect .= $sWhere;
 
-        if ( $sSortBy ) {
-            $sSelect .= " order by {$sSortBy} ";
+        if ( $sSortBy ) {  
+            $sSelect .= " order by {$sArticleTable}.{$sSortBy} ";
         }
 
         return $sSelect;
